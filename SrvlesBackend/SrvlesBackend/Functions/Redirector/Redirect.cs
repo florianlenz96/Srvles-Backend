@@ -18,7 +18,7 @@ public class Redirect
 
     [Function("Redirect")]
     public async Task<HttpResponseData> Run(
-        [HttpTrigger(AuthorizationLevel.Function, "get", Route = "{id}")] HttpRequestData req, string id,
+        [HttpTrigger(AuthorizationLevel.Anonymous, "get", Route = "{id}")] HttpRequestData req, string id,
         [TableInput("ShortUrlTable", Connection = "AzureWebJobsStorage")] TableClient shortUrlTable,
         FunctionContext executionContext)
     {
