@@ -30,9 +30,9 @@ public class Redirect
             return req.CreateResponse(HttpStatusCode.NotFound);
         }
         
-        _logger.LogInformation("Redirecting to: {ShortUrlOriginalUrl}", shortUrl.Value.OriginalUrl);
+        _logger.LogInformation("Redirecting to: {ShortUrlOriginalUrl}", shortUrl.Value.OriginUrl);
         var response = req.CreateResponse(HttpStatusCode.PermanentRedirect);
-        response.Headers.Add("Location", shortUrl.Value.OriginalUrl);
+        response.Headers.Add("Location", shortUrl.Value.OriginUrl);
 
         return response;
     }
