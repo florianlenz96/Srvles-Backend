@@ -1,4 +1,5 @@
 using System.Net;
+using System.Text.RegularExpressions;
 using Azure.Data.Tables;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
@@ -22,6 +23,13 @@ public class Redirect
         [TableInput("ShortUrlTable", Connection = "AzureWebJobsStorage")] TableClient shortUrlTable,
         FunctionContext executionContext)
     {
+        _logger.LogInformation("Redirecting to: {Id}", id);
+        if (!Regex.IsMatch(id, "^[a-zA-Z0-9]{6}$"))
+        {
+            _logger.LogInformation("Invalid short URL id: {Id}", id);
+            return req.CreateResponse(HttpStatusCode.BadRequest);
+        }
+        
         var shortUrl = await shortUrlTable.GetEntityIfExistsAsync<ShortUrlModel>(id, id);
         
         if (!shortUrl.HasValue)
