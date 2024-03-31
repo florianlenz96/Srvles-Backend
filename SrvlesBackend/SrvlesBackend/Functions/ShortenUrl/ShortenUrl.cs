@@ -48,7 +48,7 @@ public class ShortenUrl
         
         var responseMessage = req.CreateResponse(HttpStatusCode.OK);
         responseMessage.Headers.Add("Content-Type", "text/plain; charset=utf-8");
-        await responseMessage.WriteStringAsync($"{this.SvrlesBackendHost}/{shortenId}");
+        await responseMessage.WriteStringAsync(shortenId);
 
         return new ShortenUrlResponse
         {
