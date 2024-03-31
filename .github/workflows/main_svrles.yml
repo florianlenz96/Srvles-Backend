@@ -1,7 +1,7 @@
 # Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
 # More GitHub Actions for Azure: https://github.com/Azure/actions
 
-name: Build and deploy dotnet core app to Azure Function App - SrvlEsBackend
+name: Build and deploy dotnet core app to Azure Function App - svrles
 
 on:
   push:
@@ -16,6 +16,9 @@ env:
 jobs:
   build-and-deploy:
     runs-on: windows-latest
+    permissions:
+      id-token: write #This is required for requesting the JWT
+
     steps:
       - name: 'Checkout GitHub Action'
         uses: actions/checkout@v4
@@ -31,12 +34,19 @@ jobs:
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           dotnet build --configuration Release --output ./output
           popd
+      
+      - name: Login to Azure
+        uses: azure/login@v1
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_013EE24DB26F459ABC6018008BB934A0 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_1A9BCCBDFCC0427D9A2E17345A42DC78 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_81D1A323A99E4BB89492551A8515199C }}
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: 'SrvlEsBackend'
+          app-name: 'svrles'
           slot-name: 'Production'
           package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}/output'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A238EBE2F1E845BF99CC6CD86A714E10 }}
+          
